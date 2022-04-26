@@ -3,4 +3,4 @@
 ## Os SGBDs utilizados foram o **PostgreSQL** e o **MariaDB**
 ### No projeto as irformações armazenadas são sobre uma empresa seguindo o projeto do elmasri,autor do livro Sistema de Bancos de Dados(vol 7), que estamos estudando nesse bimestre, então possui tabelas como funcionários, departamentos, projetos feitos, localização dos departamentos, dependentes do funcionários, etc.
 
-### Nas pastas acima estão todos os códigos utilizados, para seu respectivo SGBD.
+### Nas pastas acima estão todos os códigos utilizados, para seus respectivos SGBD.
