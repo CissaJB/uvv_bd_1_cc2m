@@ -1,0 +1,154 @@
+/* A seguir temos os códigos para os relatórios do pset-2 */
+-- QUESTÃO 1
+select departamento.nome_departamento, avg (salario) as media_salarial from funcionario
+inner join departamento
+on funcionario.numero_departamento = departamento.numero_departamento
+group by departamento.numero_departamento;
+
+-- QUESTÃO 2
+select funcionario.sexo, avg (funcionario.salario) as media_salarial from funcionario
+group by sexo;
+
+-- QUESTÃO 3
+select departamento.nome_departamento, funcionario.primeiro_nome, funcionario.nome_meio, 
+funcionario.ultimo_nome, funcionario.data_nascimento, funcionario.salario, age ( data_nascimento, current_date)
+as idade
+from departamento
+inner join funcionario
+on departamento.numero_departamento = funcionario.numero_departamento
+order by nome_departamento;
+
+-- QUESTÃO 4
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, 
+age ( data_nascimento, current_date) as idade, funcionario.salario , case when salario < 35000  then salario * 1.2 else salario * 1.15 end as salario_com_reajuste
+from funcionario;
+
+-- QUESTÃO 5
+/* Para essa questão foi preciso fazer um reajuste na tabela departamento.
+Alteração Feita */
+
+ALTER TABLE IF EXISTS elmasri.departamento
+    ADD COLUMN nome_gerente character varying (15);
+
+COMMENT ON COLUMN elmasri.departamento.nome_gerente
+    IS 'Armazena os gerentes de cada departamento';
+    
+Update departamento
+set nome_gerente = 'Jorge'
+where numero_departamento = 1;
+
+Update departamento
+set nome_gerente = 'Jennifer'
+where numero_departamento = 4;
+
+Update departamento
+set nome_gerente = 'Fernando'
+where numero_departamento = 5;
+
+select departamento.nome_departamento , departamento.numero_departamento , departamento.nome_gerente as 
+gerente_do_departamenento, funcionario.primeiro_nome, funcionario.nome_meio, 
+funcionario.ultimo_nome, funcionario.salario 
+from funcionario
+inner join departamento
+on funcionario.numero_departamento = departamento.numero_departamento
+order by nome_departamento, salario desc;
+
+-- QUESTÃO 6
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome , departamento.nome_departamento ,
+dependente.nome_dependente , case dependente.sexo when 'F' then 'Feminino' else 'Masculino' end 
+as sexo_do_dependente, age ( dependente.data_nascimento , current_date) as idade_do_dependente
+from funcionario
+inner join dependente
+on funcionario.cpf = dependente.cpf_funcionario
+inner join departamento 
+on funcionario.numero_departamento = departamento.numero_departamento;
+
+-- QUESTÃO 7
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, departamento.numero_departamento,
+departamento.nome_departamento, funcionario.salario
+from funcionario
+left join dependente
+on funcionario.cpf = dependente.cpf_funcionario
+inner join departamento
+on funcionario.numero_departamento = departamento.numero_departamento
+where dependente.nome_dependente is null;
+
+-- QUESTÃO 8
+select departamento.numero_departamento, departamento.nome_departamento,projeto_trabalha_em.nome_projeto ,
+funcionario_trabalha_em.numero_projeto, funcionario.primeiro_nome, funcionario.nome_meio , 
+funcionario.ultimo_nome, funcionario_trabalha_em.horas
+from funcionario_trabalha_em
+inner join projeto_trabalha_em
+on projeto_trabalha_em.numero_projeto = funcionario_trabalha_em.numero_projeto
+inner join funcionario
+on funcionario.cpf = funcionario_trabalha_em.cpf_funcionario
+inner join departamento
+on funcionario.numero_departamento = departamento.numero_departamento
+order by departamento.nome_departamento;
+
+-- QUESTÃO 9
+select projeto_trabalha_em.nome_projeto, departamento.nome_departamento , sum (funcionario_trabalha_em.horas) 
+as soma_total_horas_trabalhadas
+from projeto_trabalha_em
+inner join departamento
+on departamento.numero_departamento = projeto_trabalha_em.numero_departamento
+inner join funcionario_trabalha_em
+on funcionario_trabalha_em.numero_projeto = projeto_trabalha_em.numero_projeto 
+group by projeto_trabalha_em.nome_projeto, departamento.nome_departamento 
+order by departamento.nome_departamento;
+
+-- QUESTÃO 10 
+select departamento.numero_departamento, departamento.nome_departamento, avg (funcionario.salario)
+as media_salarial_funcionarios
+from departamento
+inner join funcionario
+on departamento.numero_departamento = funcionario.numero_departamento
+group by departamento.nome_departamento , departamento.numero_departamento;
+
+-- QUESTÃO 11
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, 
+projeto_trabalha_em.nome_projeto, funcionario_trabalha_em.horas,funcionario_trabalha_em.horas * 50 
+as salario_hora_trabalhada from funcionario
+inner join funcionario_trabalha_em
+on funcionario.cpf = funcionario_trabalha_em.cpf_funcionario
+inner join projeto_trabalha_em
+on projeto_trabalha_em.numero_projeto = funcionario_trabalha_em.numero_projeto;
+
+-- QUESTÃO 12
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, 
+projeto_trabalha_em.nome_projeto, funcionario_trabalha_em.horas from funcionario
+inner join funcionario_trabalha_em
+on funcionario.cpf = funcionario_trabalha_em.cpf_funcionario
+inner join projeto_trabalha_em
+on projeto_trabalha_em.numero_projeto = funcionario_trabalha_em.numero_projeto
+where funcionario_trabalha_em.horas is null;
+
+-- QUESTÃO 13
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, funcionario.sexo 
+as sexo_do_funcionario, age (funcionario.data_nascimento, current_date ) as idade_funcionario,
+dependente.nome_dependente, dependente.sexo as sexo_dependente,
+age ( dependente.data_nascimento , current_date) as idade_dependente 
+from funcionario 
+left join dependente
+on funcionario.cpf = dependente.cpf_funcionario
+order by idade_funcionario ,idade_dependente;
+
+-- QUESTÃO 14
+select departamento.nome_departamento, departamento.numero_departamento, count(funcionario.cpf)
+as quantidade_funcionarios_departamento
+from departamento
+inner join funcionario 
+on funcionario.numero_departamento = departamento.numero_departamento
+group by departamento.nome_departamento, departamento.numero_departamento;
+
+-- QUESTÃO 15
+select funcionario.primeiro_nome, funcionario.nome_meio, funcionario.ultimo_nome, 
+projeto_trabalha_em.nome_projeto, departamento.nome_departamento from funcionario
+inner join funcionario_trabalha_em
+on funcionario.cpf = funcionario_trabalha_em.cpf_funcionario
+inner join projeto_trabalha_em
+on projeto_trabalha_em.numero_projeto = funcionario_trabalha_em.numero_projeto
+inner join departamento
+on departamento.numero_departamento = funcionario.numero_departamento;
+
+
