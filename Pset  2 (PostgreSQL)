@@ -1,4 +1,9 @@
+/* Para utilizar os códigos abaixo é preciso alterar o esquema para o do elmasri, criado no PSET 1 */
+
+SET SEARCH_PATH TO elmasri, "$user", public;
+
 /* A seguir temos os códigos para os relatórios do pset-2 */
+
 -- QUESTÃO 1
 select departamento.nome_departamento, avg (salario) as media_salarial from funcionario
 inner join departamento
